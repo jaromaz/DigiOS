@@ -1,4 +1,4 @@
-# DigiOS - mini operating system for Digispark
+# DigiOS - mini OS for Digispark
 
 The sketch allows you to log in to Digispark, execute several commands, and then log out. It works on the default Digispark with micronucleus bootloader installed, and uses the DigiCDC module to emulate USB communication, because Digispark itself does not have any additional USB chip and everything is done in the AtTiny85 software.
 
