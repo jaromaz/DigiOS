@@ -5,7 +5,7 @@
 
   Available commands:
   login, p[0-2] [on|off], temp, help, vcc, clear,
-  uptime, clock [1-7], reboot, logout, exit
+  uptime, clock [1-7], ls, reboot, logout, exit
   ---------------------------------------------- */
 
 // password of up to seven characters
