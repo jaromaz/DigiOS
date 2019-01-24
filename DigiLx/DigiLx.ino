@@ -50,7 +50,7 @@ void clockMessageFormat (byte speed)
   SerialUSB.print(F("\r\nset to "));
   SerialUSB.print(clocks[speed], DEC);
   SerialUSB.print((clocks[speed] > 16) ? F("k") : F("m"));
-  SerialUSB.println(F("Hz\r\n\r\nbye ..."));
+  SerialUSB.println(F("Hz\r\n\r\nbye ... "));
 }
 
 void clockSpeed(byte speed)
@@ -199,11 +199,12 @@ void setup()
 void loop()
 //-----------------------------------------------
 {
+  // the Android Serial USB Terminal app requires the following 200 ms delays
+  // if you are using another system, you can remove all these delays.
+  
   serialReader();
   if (stringComplete)
   {
-    // the Android Serial USB Terminal application requires the following 200 ms delays
-    // if you are using another system, you can remove all these 200 ms delays.
     SerialUSB.delay(200);
 
     if (!strcmp(stringInput, "login")) state = 2;
@@ -216,7 +217,7 @@ void loop()
         state = 3;
       } else {
         SerialUSB.delay(1500);
-        SerialUSB.println(F("\r\nLogin incorrect"));
+        SerialUSB.println(F("\r\nLogin incorrect "));
         state = 1;
       }
     }
@@ -232,10 +233,8 @@ void loop()
           PORTB &= ~(1 << stringInput[1] - 48);
         }
       }
-      if (strstr(stringInput, "clock ")) {
-        clockSpeed(stringInput[6] - 48);
-      }
-      // ---------------------------------------------------------------------
+      if (strstr(stringInput, "clock ")) clockSpeed(stringInput[6] - 48);
+      // -------------------------------------------------------------------
 
       // keyword procedures
       for (byte i = 0; i < sizeof keys / sizeof * keys; i++) {

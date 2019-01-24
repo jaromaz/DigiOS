@@ -36,7 +36,7 @@ void clockMessageFormat (byte speed)
   SerialUSB.print(F("\r\nset to "));
   SerialUSB.print(clocks[speed], DEC);
   SerialUSB.print((clocks[speed] > 16) ? F("k") : F("m"));
-  SerialUSB.println(F("Hz\r\n\r\nbye ..."));
+  SerialUSB.println(F("Hz\r\n\r\nbye"));
 }
 
 void clockSpeed(byte speed)
@@ -134,7 +134,7 @@ void clearScreen()
 static void horizontaLine()
 //-----------------------------------------------
 {
-  for (byte i = 0; i < 33; i++)
+  for (byte i = 0; i < 32; i++)
   SerialUSB.print(F("-"));
 }
 
@@ -142,7 +142,7 @@ static void gpioList()
 //-----------------------------------------------
 {
  horizontaLine();
- SerialUSB.print(F("\r\nGPIO list\r\n"));
+ SerialUSB.print(F("\r\nGPIO status list\r\n"));
  horizontaLine();
  for (byte i = 0; i < 3; i++) {
    SerialUSB.print(F("\r\nPin "));
@@ -157,7 +157,7 @@ static void help()
 //-----------------------------------------------
 {
  horizontaLine();
- SerialUSB.println(F("\r\nDigiOS version 1.4 User Commands:"));
+ SerialUSB.println(F("\r\nDigiOS version 1.4 User Commands"));
  horizontaLine();
  SerialUSB.println(F("\r\nlogin,\
  p[0-2] [on|off], temp, help, vcc, clear,\r\nuptime, clock [1-7], ls, reboot, logout,\
@@ -208,11 +208,12 @@ void setup()
 void loop()
 //-----------------------------------------------
 {
+  // the Android Serial USB Terminal app requires the following 200 ms delays
+  // if you are using another system, you can remove all these delays.
+  
   serialReader();
   if (stringComplete)
   {
-    // the Android Serial USB Terminal application requires the following 200 ms delays
-    // if you are using another system, you can remove all these 200 ms delays.
     SerialUSB.delay(200);
 
     if (!strcmp(stringInput, "login")) state = 2;
@@ -241,9 +242,7 @@ void loop()
           PORTB &= ~(1 << stringInput[1] - 48);
         }
       }
-      if (strstr(stringInput, "clock ")) {
-        clockSpeed(stringInput[6] - 48);
-      }
+      if (strstr(stringInput, "clock ")) clockSpeed(stringInput[6] - 48);
       // ---------------------------------------------------------------------
 
       // keyword procedures
