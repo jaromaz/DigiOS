@@ -131,7 +131,9 @@ void clearScreen()
   }
 }
 
-static void horizontaLine() {
+static void horizontaLine()
+//-----------------------------------------------
+{
   for (byte i = 0; i < 33; i++)
   SerialUSB.print(F("-"));
 }
