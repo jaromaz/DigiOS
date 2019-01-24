@@ -1,13 +1,12 @@
 
 /* ----------------------------------------------
-  DigiOS 1.3 - Digispark mini-OS
-  Copyright (c) 2019 Jaromaz https://jm.iq.pl
+  DigiOS 1.4 - mini-OS emulator for Digispark
+  Copyright (c) Jaromaz https://jm.iq.pl
 
   Available commands:
   login, p[0-2] [on|off], temp, help, vcc, clear,
   uptime, clock [1-7], reboot, logout, exit
   ---------------------------------------------- */
-
 
 // password of up to seven characters
 const char password[] = "admin12";
@@ -36,11 +35,7 @@ void clockMessageFormat (byte speed)
 {
   SerialUSB.print(F("\r\nset to "));
   SerialUSB.print(clocks[speed], DEC);
-  if (clocks[speed] > 16) {
-    SerialUSB.print(F("k"));
-  } else {
-    SerialUSB.print(F("m"));
-  }
+  SerialUSB.print((clocks[speed] > 16) ? F("k") : F("m"));
   SerialUSB.println(F("Hz\r\n\r\nbye ..."));
 }
 
@@ -136,11 +131,34 @@ void clearScreen()
   }
 }
 
+static void horizontaLine() {
+  for (byte i = 0; i < 33; i++)
+  SerialUSB.print(F("-"));
+}
+
+static void gpioList()
+//-----------------------------------------------
+{
+ horizontaLine();
+ SerialUSB.print(F("\r\nGPIO list\r\n"));
+ horizontaLine();
+ for (byte i = 0; i < 3; i++) {
+   SerialUSB.print(F("\r\nPin "));
+   SerialUSB.print(i, DEC);
+   SerialUSB.print((PINB & (1 << i)) ? F(" HIGH") : F(" LOW"));
+ }
+ SerialUSB.println();
+ horizontaLine();
+}
+
 static void help()
 //-----------------------------------------------
 {
- SerialUSB.println(F("\r\nDigiOS version 1.3\r\n\r\nUser Commands:\r\n\r\nlogin,\
- p[0-2] [on|off], temp, help, vcc, clear,\r\nuptime, clock [1-7], reboot, logout,\
+ horizontaLine();
+ SerialUSB.println(F("\r\nDigiOS version 1.4 User Commands:"));
+ horizontaLine();
+ SerialUSB.println(F("\r\nlogin,\
+ p[0-2] [on|off], temp, help, vcc, clear,\r\nuptime, clock [1-7], ls, reboot, logout,\
  exit\r\n\r\nclock 1 - 8mHz, 2 - 4mHz, 3 - 2mHz, 4 - 1mHz,\r\n5 - 500kHz,\
  6 - 250kHz, 7 - 125kHz"));
 }
@@ -172,7 +190,7 @@ static const struct { const char phrase[8]; void (*handler)(void); } keys[] =
   // ---- comment on this block to get more memory for your own code ---
   { "vcc", getVcc }, { "help", help }, { "temp", getTemp },
   { "reboot", reboot },  { "exit", stateChg }, { "uptime", uptime },
-  { "clear", clearScreen },
+  { "clear", clearScreen }, { "ls", gpioList },
   // -------------------------------------------------------------------
   { "logout", stateChg }
 };
@@ -238,7 +256,7 @@ void loop()
     if (state < 3)
     {
       if (state > 1) clearScreen();
-      SerialUSB.print(F("\r\nDigiOS 1.3 - Digispark mini-OS\r\n\r\nPassword: "));
+      SerialUSB.print(F("\r\nDigiOS 1.4 - Digispark mini-OS\r\n\r\nPassword: "));
       state = 4;
     }
 

@@ -12,6 +12,7 @@ When powering the Digispark via the VIN pin, you can connect to it via USB at an
 * **vcc** gives the power supply voltage of Digispark in millivolts
 * **reboot** software restart of Digispark
 * **clear** clears a display
+* **ls** displays GPIO status
 * **temp** specifies the temperature of the chip
 * **login** prompts you to enter your password
 * **clock [0-7]** reduces clock timing
