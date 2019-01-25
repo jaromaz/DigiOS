@@ -3,11 +3,10 @@
   DigiLx - Linux-style DigiOS
   DigiOS 1.4 - mini-OS emulator for Digispark
   Copyright (c) Jaromaz https://jm.iq.pl
-  
   Available commands:
   login, p[0-2] [on|off], temp, help, vcc, clear,
   uptime, clock [1-7], ls, reboot, logout, exit
-  ---------------------------------------------- */
+  ----------------------------------------------- */
 
 // root password of up to seven characters
 const char rootPassword[] = "admin12";
@@ -44,7 +43,7 @@ static void gpioList()
  SerialUSB.println();
 }
 
-void clockMessageFormat (byte speed)
+static void clockMessageFormat (byte speed)
 //-----------------------------------------------
 {
   SerialUSB.print(F("\r\nset to "));
@@ -53,7 +52,7 @@ void clockMessageFormat (byte speed)
   SerialUSB.println(F("Hz\r\n\r\nbye ... "));
 }
 
-void clockSpeed(byte speed)
+static void clockSpeed(byte speed)
 //-----------------------------------------------
 // edit the code of this procedure to get the right result
 {
@@ -71,7 +70,9 @@ void clockSpeed(byte speed)
   reboot();
 }
 
+static void stateChg() { state = 2; }
 //-----------------------------------------------
+
 #define SECS_PER_MIN  (60UL)
 #define SECS_PER_HOUR (3600UL)
 #define SECS_PER_DAY  (SECS_PER_HOUR * 24L)
@@ -148,14 +149,10 @@ void clearScreen()
 static void help()
 //-----------------------------------------------
 {
- SerialUSB.println(F("\r\nDigiLx version 1.4 User\
- Commands:\r\n\r\nlogin,p[0-2] [on|off], temp, help, vcc, clear,\
- \r\nuptime, clock [1-7], ls, reboot, logout, exit\r\n\r\nclock 1 - 8mHz,\
- 2 - 4mHz, 3 - 2mHz, 4 - 1mHz,\r\n5 - 500kHz, 6 - 250kHz, 7 - 125kHz"));
-}
-
-static void stateChg() {
-  state = 2;
+ SerialUSB.println(F("\r\nDigiLx version 1.4 User Commands:\r\n\r\nlogin,\
+ p[0-2] [on|off], temp, help, vcc, clear,\r\nuptime, clock [1-7], ls,\
+ reboot, logout, exit\r\n\r\nclock 1 - 8mHz, 2 - 4mHz, 3 - 2mHz,\
+ 4 - 1mHz,\r\n5 - 500kHz, 6 - 250kHz, 7 - 125kHz"));
 }
 
 static void serialReader()
@@ -175,6 +172,14 @@ static void serialReader()
   }
 }
 
+void setup()
+//-----------------------------------------------
+{
+  // Set pins 0-2 as OUTPUT:
+  DDRB |= (1 << PB0) | (1 << PB1) | (1 << PB2);
+  SerialUSB.begin();
+}
+
 // list of keywords and procedures assigned to them
 static const struct { const char phrase[8]; void (*handler)(void); } keys[] =
 {
@@ -185,16 +190,6 @@ static const struct { const char phrase[8]; void (*handler)(void); } keys[] =
   // -------------------------------------------------------------------
   { "logout", stateChg }
 };
-
-
-void setup()
-//-----------------------------------------------
-{
-  // Set pins 0-2 as OUTPUT:
-  DDRB |= (1 << PB0) | (1 << PB1) | (1 << PB2);
-  SerialUSB.begin();
-}
-
 
 void loop()
 //-----------------------------------------------
@@ -207,7 +202,7 @@ void loop()
   {
     SerialUSB.delay(200);
 
-    if (!strcmp(stringInput, "login")) state = 2;
+    if (!strcmp(stringInput, "login")) stateChg();
 
     // password validation
     if (state == 4)
@@ -217,7 +212,7 @@ void loop()
         state = 3;
       } else {
         SerialUSB.delay(1500);
-        SerialUSB.println(F("\r\nLogin incorrect "));
+        SerialUSB.println(F("\r\nLogin incorrect"));
         state = 1;
       }
     }
