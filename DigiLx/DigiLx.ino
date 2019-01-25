@@ -34,7 +34,7 @@ static void reboot()
 static void gpioList() 
 //-----------------------------------------------
 {
- SerialUSB.print(F("\r\nGPIO list:"));
+ SerialUSB.print(F("\r\nGPIO status list:"));
  for (byte i = 0; i < 3; i++) {
    SerialUSB.print(F("\r\nPin "));
    SerialUSB.print(i, DEC);
