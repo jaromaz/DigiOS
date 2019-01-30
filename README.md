@@ -27,7 +27,7 @@ DigiLx is a Linux-style DigiOS - requires a root login and displays a linux prom
 
 DigiOS is licensed under GNU General Public License v3.0
 
-More information: [https://jm.iq.pl/digios][2]
+For more information please visit my website: [https://jm.iq.pl/digios][2]
 
 [1]: https://www.youtube.com/watch?v=Ns_7tm4fF6s
 [2]: https://jm.iq.pl/digios/
