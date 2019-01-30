@@ -15,7 +15,7 @@ const char password[] = "admin12";
 #include <DigiCDC.h>
 
 char serialChar[1], stringInput[8];
-boolean stringComplete = false;
+bool stringComplete = false;
 uint8_t state = 1;
 uint8_t clocks[] = { 16, 8, 4, 2, 1, 500, 250, 125 };
 
