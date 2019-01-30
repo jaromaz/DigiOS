@@ -12,11 +12,13 @@
 const char rootPassword[] = "admin12";
 
 //-----------------------------------------------
+
 #include <DigiCDC.h>
+
 char serialChar[1], stringInput[8];
 boolean stringComplete = false;
-byte state = 1;
-byte clocks[] = { 16, 8, 4, 2, 1, 500, 250, 125 };
+uint8_t state = 1;
+uint8_t clocks[] = { 16, 8, 4, 2, 1, 500, 250, 125 };
 char login[8];
 
 static void reboot()
@@ -31,11 +33,24 @@ static void reboot()
   (*ptrToFunction)();
 }
 
+static void getTemp()
+//-----------------------------------------------
+{
+  analogReference(INTERNAL1V1);
+  analogRead(A0);
+  SerialUSB.delay(200);
+  uint16_t temp = analogRead(A0 + 15) - 273;
+  analogReference(DEFAULT);
+  SerialUSB.print(F("\r\nDigispark temperature: "));
+  SerialUSB.print(temp);
+  SerialUSB.println(F("°C"));
+}
+
 static void gpioList() 
 //-----------------------------------------------
 {
  SerialUSB.print(F("\r\nGPIO status list:"));
- for (byte i = 0; i < 3; i++) {
+ for (uint8_t i = 0; i < 3; i++) {
    SerialUSB.print(F("\r\nPin "));
    SerialUSB.print(i, DEC);
    SerialUSB.print((PINB & (1 << i)) ? F(" HIGH") : F(" LOW"));
@@ -43,7 +58,7 @@ static void gpioList()
  SerialUSB.println();
 }
 
-static void clockMessageFormat (byte speed)
+static void clockMessageFormat (uint8_t speed)
 //-----------------------------------------------
 {
   SerialUSB.print(F("\r\nset to "));
@@ -52,12 +67,12 @@ static void clockMessageFormat (byte speed)
   SerialUSB.println(F("Hz\r\n\r\nbye ... "));
 }
 
-static void clockSpeed(byte speed)
+static void clockSpeed(uint8_t speed)
 //-----------------------------------------------
 // edit the code of this procedure to get the right result
 {
   clockMessageFormat(speed);
-  for (byte i = 0; i < 12; i++) {
+  for (uint8_t i = 0; i < 12; i++) {
     PORTB |= (1 << 1);
     SerialUSB.delay(200);
     PORTB &= ~(1 << 1);
@@ -81,7 +96,7 @@ static void stateChg() { state = 2; }
 #define numberOfHours(_time_) (( _time_% SECS_PER_DAY) / SECS_PER_HOUR)
 #define elapsedDays(_time_) ( _time_ / SECS_PER_DAY)
 
-void uptimeFormat(byte digits, char* form)
+void uptimeFormat(uint8_t digits, char* form)
 //-----------------------------------------------
 {
   if (digits > 0)
@@ -124,23 +139,10 @@ static void getVcc()
   SerialUSB.println(F(" mV"));
 }
 
-static void getTemp()
-//-----------------------------------------------
-{
-  analogReference(INTERNAL1V1);
-  analogRead(A0);
-  SerialUSB.delay(200);
-  int temp = analogRead(A0 + 15) - 273;
-  analogReference(DEFAULT);
-  SerialUSB.print(F("\r\nDigispark temperature: "));
-  SerialUSB.print(temp);
-  SerialUSB.println(F("°C"));
-}
-
 void clearScreen()
 //-----------------------------------------------
 {
-  for (byte i = 0; i < 35; i++) {
+  for (uint8_t i = 0; i < 35; i++) {
     SerialUSB.println();
     SerialUSB.delay(5);
   }
@@ -198,6 +200,7 @@ void loop()
   // if you are using another system, you can remove all these delays.
   
   serialReader();
+  
   if (stringComplete)
   {
     SerialUSB.delay(200);
@@ -232,7 +235,7 @@ void loop()
       // -------------------------------------------------------------------
 
       // keyword procedures
-      for (byte i = 0; i < sizeof keys / sizeof * keys; i++) {
+      for (uint8_t i = 0; i < sizeof keys / sizeof * keys; i++) {
         if (!strcmp(stringInput, keys[i].phrase)) keys[i].handler();
       }
 
@@ -255,7 +258,7 @@ void loop()
       state = 5;
     }
 
-    // SerialUSB.delay(200);
+    SerialUSB.delay(200);
     stringInput[0] = 0;
     stringComplete = false;
   }

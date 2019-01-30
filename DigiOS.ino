@@ -11,11 +11,13 @@
 const char password[] = "admin12";
 
 //-----------------------------------------------
+
 #include <DigiCDC.h>
+
 char serialChar[1], stringInput[8];
 boolean stringComplete = false;
-byte state = 1;
-byte clocks[] = { 16, 8, 4, 2, 1, 500, 250, 125 };
+uint8_t state = 1;
+uint8_t clocks[] = { 16, 8, 4, 2, 1, 500, 250, 125 };
 
 static void reboot()
 //-----------------------------------------------
@@ -29,7 +31,23 @@ static void reboot()
   (*ptrToFunction)();
 }
 
-static void clockMessageFormat (byte speed)
+static void getVcc()
+//-----------------------------------------------
+{
+  ADMUX = _BV(MUX3) | _BV(MUX2);
+  SerialUSB.delay(2);
+  ADCSRA |= _BV(ADSC);
+  while (bit_is_set(ADCSRA, ADSC));
+  uint8_t low  = ADCL;
+  uint8_t high = ADCH;
+  long result = (high << 8) | low;
+  result = 1125300L / result;
+  SerialUSB.print(F("\r\nVoltage: "));
+  SerialUSB.print(result);
+  SerialUSB.println(F(" mV"));
+}
+
+static void clockMessageFormat (uint8_t speed)
 //-----------------------------------------------
 {
   SerialUSB.print(F("\r\nset to "));
@@ -38,12 +56,12 @@ static void clockMessageFormat (byte speed)
   SerialUSB.println(F("Hz\r\n\r\nbye ..."));
 }
 
-static void clockSpeed(byte speed)
+static void clockSpeed(uint8_t speed)
 //-----------------------------------------------
 // edit the code of this procedure to get the right result
 {
   clockMessageFormat(speed);
-  for (byte i = 0; i < 12; i++) {
+  for (uint8_t i = 0; i < 12; i++) {
     PORTB |= (1 << 1);
     SerialUSB.delay(200);
     PORTB &= ~(1 << 1);
@@ -67,7 +85,7 @@ static void stateChg() { state = 2; }
 #define numberOfHours(_time_) (( _time_% SECS_PER_DAY) / SECS_PER_HOUR)
 #define elapsedDays(_time_) ( _time_ / SECS_PER_DAY)
 
-void uptimeFormat(byte digits, char* form)
+void uptimeFormat(uint8_t digits, char* form)
 //-----------------------------------------------
 {
   if (digits > 0)
@@ -94,29 +112,13 @@ static void uptime()
   SerialUSB.println();
 }
 
-static void getVcc()
-//-----------------------------------------------
-{
-  ADMUX = _BV(MUX3) | _BV(MUX2);
-  SerialUSB.delay(2);
-  ADCSRA |= _BV(ADSC);
-  while (bit_is_set(ADCSRA, ADSC));
-  uint8_t low  = ADCL;
-  uint8_t high = ADCH;
-  long result = (high << 8) | low;
-  result = 1125300L / result;
-  SerialUSB.print(F("\r\nVoltage: "));
-  SerialUSB.print(result);
-  SerialUSB.println(F(" mV"));
-}
-
 static void getTemp()
 //-----------------------------------------------
 {
   analogReference(INTERNAL1V1);
   analogRead(A0);
   SerialUSB.delay(200);
-  int temp = analogRead(A0 + 15) - 273;
+  uint16_t temp = analogRead(A0 + 15) - 273;
   analogReference(DEFAULT);
   SerialUSB.print(F("\r\nDigispark temperature: "));
   SerialUSB.print(temp);
@@ -126,7 +128,7 @@ static void getTemp()
 void clearScreen()
 //-----------------------------------------------
 {
-  for (byte i = 0; i < 35; i++) {
+  for (uint8_t i = 0; i < 35; i++) {
     SerialUSB.println();
     SerialUSB.delay(5);
   }
@@ -135,7 +137,7 @@ void clearScreen()
 static void horizontaLine()
 //-----------------------------------------------
 {
-  for (byte i = 0; i < 32; i++)
+  for (uint8_t i = 0; i < 32; i++)
   SerialUSB.print(F("-"));
 }
 
@@ -145,7 +147,7 @@ static void gpioList()
  horizontaLine();
  SerialUSB.print(F("\r\nGPIO status list\r\n"));
  horizontaLine();
- for (byte i = 0; i < 3; i++) {
+ for (uint8_t i = 0; i < 3; i++) {
    SerialUSB.print(F("\r\nPin "));
    SerialUSB.print(i, DEC);
    SerialUSB.print((PINB & (1 << i)) ? F(" HIGH") : F(" LOW"));
@@ -243,7 +245,7 @@ void loop()
       // ---------------------------------------------------------------------
 
       // keyword procedures
-      for (byte i = 0; i < sizeof keys / sizeof * keys; i++) {
+      for (uint8_t i = 0; i < sizeof keys / sizeof * keys; i++) {
         if (!strcmp(stringInput, keys[i].phrase)) keys[i].handler();
       }
 
