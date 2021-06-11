@@ -4,7 +4,7 @@ The sketch allows you to log in to Digispark, execute several commands, and then
 
 When powering the Digispark via the VIN pin, you can connect to it via USB at any time, and after performing the commands, disconnect the terminal and the device – Digispark will continue to execute the code taking into account to sent commands - as in [the video][1]:
 
-[<img src="https://jm.iq.pl/wp-content/uploads/2019/01/digios-1-740x221@2x.jpg" width="100%">][1]
+[<img src="https://jm.iq.pl/digios/digivid.jpg" width="100%">][1]
 ### Available commands
 
 * **p[0–2] [on|off]** - sends HIGH and LOW signals to individual pins
