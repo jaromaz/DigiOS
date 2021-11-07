@@ -23,8 +23,6 @@ Sketch was intended to take up as little space as possible – instead of string
 
 You can log in to Digispark under Windows with Putty (after installing Digistump drivers), to Linux with Minicom application and to Android with Serial USB Terminal. Compilation of DigiOS sketch requires installation of an earlier version of Arduino IDE – 1.8.6 and correct installation of Digispark in IDE.
 
-DigiLx is a Linux-style DigiOS - requires a root login and displays a linux prompt.
-
 DigiOS is licensed under GNU General Public License v3.0
 
 For more information please visit my website: [https://jm.iq.pl/digios][2]

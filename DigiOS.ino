@@ -1,7 +1,7 @@
 
 /* ----------------------------------------------
-  DigiOS 1.4 - mini-OS emulator for Digispark
-  Copyright (c) Jaromaz https://jm.iq.pl
+  DigiOS 1.5 - mini-OS emulator for Digispark
+  Copyright (c) Jaromaz https://jm.iq.pl/en
   Available commands:
   login, p[0-2] [on|off], temp, help, vcc, clear,
   uptime, clock [1-7], ls, reboot, logout, exit
