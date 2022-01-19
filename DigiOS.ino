@@ -160,7 +160,7 @@ static void help()
 //-----------------------------------------------
 {
  horizontaLine();
- SerialUSB.println(F("\r\nDigiOS version 1.4 User Commands"));
+ SerialUSB.println(F("\r\nDigiOS version 1.5 User Commands"));
  horizontaLine();
  SerialUSB.println(F("\r\nlogin, p[0-2] [on|off], temp, help,\
  vcc, clear,\r\nuptime, clock [1-7], ls, reboot, logout,\
@@ -256,7 +256,7 @@ void loop()
     if (state < 3)
     {
       if (state > 1) clearScreen();
-      SerialUSB.print(F("\r\nDigiOS 1.4 - Digispark mini-OS\r\n\r\nPassword: "));
+      SerialUSB.print(F("\r\nDigiOS 1.5 - Digispark mini-OS\r\n\r\nPassword: "));
       state = 4;
     }
 

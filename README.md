@@ -21,7 +21,9 @@ When powering the Digispark via the VIN pin, you can connect to it via USB at an
 
 Sketch was intended to take up as little space as possible – instead of strings I used character arrays, instead of pinMode/digitalWrite registers and bit operations, thanks to which it was possible to push so many functions on such a small device. All three components together occupy almost 100% of Digispark’s memory, but to increase the amount of available space for your own code, it is enough to remove the reference to unnecessary functions (e.g. temp, uptime, vcc). These references are marked in a special code block – after deleting them, more than 30% of the memory will be available (excluding bootloader).
 
-You can log in to Digispark under Windows with Putty (after installing Digistump drivers), to Linux with Minicom application and to Android with Serial USB Terminal. Compilation of DigiOS sketch requires installation of an earlier version of Arduino IDE – 1.8.6 and correct installation of Digispark in IDE.
+You can log in to Digispark under Windows with Putty (after installing Digistump drivers), to Linux with Minicom application and to Android with Serial USB Terminal. 
+
+Compilation of DigiOS sketch requires installation of an earlier version of Arduino IDE – 1.8.6, correct installation of Digispark in IDE and [latest Micronucleus release][3].
 
 DigiOS is licensed under GNU General Public License v3.0
 
@@ -29,4 +31,5 @@ For more information please visit my website: [https://jm.iq.pl/digios][2]
 
 [1]: https://www.youtube.com/watch?v=Ns_7tm4fF6s
 [2]: https://jm.iq.pl/digios/
+[3]: https://github.com/micronucleus/micronucleus
 
